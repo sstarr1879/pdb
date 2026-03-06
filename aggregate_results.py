@@ -20,7 +20,7 @@ from collections import defaultdict
 METRIC_FIELDS = [
     "word_count", "char_count", "sentence_count", "paragraph_count",
     "hedge_count", "refusal_count", "is_refusal",
-    "specificity_hits", "hedge_density", "specificity_density",
+    "specificity_hits", "factual_claims_count", "hedge_density", "specificity_density", "claims_density",
     "response_time_s",
 ]
 
@@ -58,9 +58,9 @@ def print_pivot(results, row_key, row_label):
     print(f"\n{'=' * 80}")
     print(f"  BY {row_label.upper()}")
     print(f"{'=' * 80}")
-    header = f"{'Key':<22} {'N':>4} {'AvgWords':>9} {'AvgHedge':>9} {'AvgSpec':>8} {'Refusals':>9}"
+    header = f"{'Key':<22} {'N':>4} {'AvgWords':>9} {'AvgHedge':>9} {'AvgSpec':>8} {'AvgClaims':>10} {'Refusals':>9}"
     print(header)
-    print("-" * 80)
+    print("-" * 90)
 
     for key in sorted(groups.keys()):
         recs = groups[key]
@@ -69,6 +69,7 @@ def print_pivot(results, row_key, row_label):
               f"{avg([r['word_count'] for r in recs]):>9} "
               f"{avg([r['hedge_count'] for r in recs]):>9} "
               f"{avg([r['specificity_hits'] for r in recs]):>8} "
+              f"{avg([r.get('factual_claims_count', 0) for r in recs]):>10} "
               f"{sum(1 for r in recs if r.get('is_refusal')):>9}")
 
 
